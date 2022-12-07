@@ -4,9 +4,9 @@
 import {CreateTableInput} from "aws-sdk/clients/dynamodb";
 const AWS = require("aws-sdk");
 import dayjs = require("dayjs");
-import {logger} from "@icarus/logger";
 import defaultTableDefinition from "./default-tabledef.json";
 const DynamoDB = require('aws-sdk/clients/dynamodb');
+import logger from "./logger";
 
 /**
  * Used in the DynamoTestIntegration as a form of callback to update the Item being inserted into the table.
@@ -31,7 +31,7 @@ export interface DynamoOptions {
 export class DynamoTools {
     public static GSI_SK = "GSIsk";
     public static GSI1_PK = "GSI1pk";
-    // public static GSI_TYPE = "GSItype";
+    public static GSI_TYPE = "GSItype";
 
     // public static GSI_LOOKUP = "GSIlookup";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@icarus/dynamo-tools",
+  "name": "@onmiddleground/dynamo-tools",
   "version": "1.0.1",
   "description": "Useful Dynamo Tools for development and testing",
   "main": "dist/index.js",
@@ -21,8 +21,8 @@
   "author": "Gary Waddell",
   "license": "ISC",
   "dependencies": {
-    "@icarus/logger": "^1.0.0",
-    "dayjs": "^1.10.5"
+    "dayjs": "^1.10.5",
+    "pino": "^8.7.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -33,7 +33,7 @@
     "aws-sdk": "^2.726.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^6.1.4",
+    "mocha": "^10.1.0",
     "rimraf": "^2.6.3",
     "sinon": "^9.0.2",
     "source-map-support": "^0.5.11",

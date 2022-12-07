@@ -1,4 +1,4 @@
-import {logger} from "@icarus/logger";
+import logger from "../logger";
 logger.level = "debug";
 
 import {DynamoTools} from "../DynamoTools";
