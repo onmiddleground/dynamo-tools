@@ -20,7 +20,7 @@ export interface DataCreatePlugin {
  * Local Dev options.
  */
 export interface DynamoOptions {
-    localEndpoint?: string,
+    endpoint?: string,
     region?: string
 }
 
@@ -51,7 +51,7 @@ export class DynamoTools {
         if (options || useLocal) {
             const awsOptions: any = {
                 region: options.region || "us-east-1",
-                endpoint: options.localEndpoint || "http://localhost:4566"
+                endpoint: options.endpoint || "http://localhost:4566"
             }
             AWS.config.update(awsOptions);
         }
@@ -160,9 +160,9 @@ export class DynamoTools {
             let putRequest = {
                 PutRequest: {
                     Item: {
-                        ...item,
                         cadt: now.toISOString(),
                         uadt: now.toISOString(),
+                        ...item,
                     }
                 }
             }
