@@ -1,12 +1,10 @@
 /**
  * Utility for creating and deleting a Dynamo Table as well as seeding data to the table
  */
-import {CreateTableInput} from "aws-sdk/clients/dynamodb";
-const AWS = require("aws-sdk");
 import dayjs = require("dayjs");
 import defaultTableDefinition from "./default-tabledef.json";
-const DynamoDB = require('aws-sdk/clients/dynamodb');
 import logger from "./logger";
+import { CreateTableInput, DynamoDB } from '@aws-sdk/client-dynamodb';
 
 /**
  * Used in the DynamoTestIntegration as a form of callback to update the Item being inserted into the table.
@@ -53,7 +51,7 @@ export class DynamoTools {
                 region: options.region || "us-east-1",
                 endpoint: options.endpoint || "http://localhost:4566"
             }
-            AWS.config.update(awsOptions);
+            // AWS.config.update(awsOptions);
         }
     }
 
@@ -63,7 +61,7 @@ export class DynamoTools {
         try {
             await dynamoDB.deleteTable({
                 TableName: tableName
-            }).promise();
+            });
             logger.debug(`Deleted Table -> ${tableName}`);
         } catch (err) {
             logger.warn(`Tried to delete ${tableName} but it may not exist ${err}. Ignoring.`);
@@ -108,7 +106,7 @@ export class DynamoTools {
             const dynamoDB = new DynamoDB();
             let tableResult;
             try {
-                tableResult = await dynamoDB.createTable(params).promise();
+                tableResult = await dynamoDB.createTable(params);
                 logger.debug(`Table Created -> ${tableName}`);
             } catch (err) {
                 logger.error("Error creating DB.  DB may already exist", err);
@@ -129,7 +127,7 @@ export class DynamoTools {
      */
     public async seedData(items: any, plugin?: DataCreatePlugin) {
         // Assert.ok(type != null, "type is a required field and must be an entity type name");
-        const docClient = new AWS.DynamoDB.DocumentClient();
+        const docClient = new DynamoDB();
         const tableName = this.tableName;
 
         const batch: any = {
@@ -142,7 +140,7 @@ export class DynamoTools {
         for (const dataItem of items) {
             let item = dataItem;
             if (batch.RequestItems[tableName].length >= MAX_BATCH_SIZE) {
-                await docClient.batchWrite(batch).promise();
+                await docClient.batchWriteItem(batch);
                 batch.RequestItems[tableName] = [];
             }
 
@@ -171,7 +169,7 @@ export class DynamoTools {
 
         // Include the last batch
         if (batch.RequestItems[tableName].length > 0) {
-            await docClient.batchWrite(batch).promise();
+            await docClient.batchWriteItem(batch);
         }
 
         logger.debug(`Finished Creating Data`);
