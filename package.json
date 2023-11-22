@@ -1,6 +1,6 @@
 {
   "name": "@onmiddleground/dynamo-tools",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Useful Dynamo Tools for development and testing",
   "main": "dist/index.js",
   "files": [
@@ -14,13 +14,16 @@
     "clean": "node ./node_modules/rimraf/bin.js dist",
     "build": "npm run clean && node ./node_modules/typescript/bin/tsc",
     "watch": "npm run clean && node ./node_modules/typescript/bin/tsc --watch",
-    "test": "mocha -r ts-node/register src/**/*-spec.ts"
+    "test": "mocha -r ts-node/register src/**/*-spec.ts",
+    "_publish:force": "npm run build && npm unpublish --force && npm publish",
+    "_publish": "npm run build && npm version patch && npm publish"
   },
   "author": "Gary Waddell",
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.10.5",
-    "pino": "^8.7.0"
+    "pino": "^8.7.0",
+    "@aws-sdk/client-dynamodb": "^3.454.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
@@ -28,7 +31,6 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.14.0",
     "@types/sinon": "^10.0.13",
-    "aws-sdk": "^2.1359.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
