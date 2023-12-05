@@ -12,14 +12,13 @@ describe("dynamo tools", function() {
     let dynamoTools: DynamoTools;
 
     before(async () => {
-        dynamoTools = new DynamoTools("unit-test-db", {});
+        dynamoTools = new DynamoTools("unit-test-db", {
+            endpoint: "http://localhost:4566",
+            region: "us-east-1",
+        });
     });
 
     after(async () => {
-        await dynamoTools.deleteTable();
-    });
-
-    afterEach(async () => {
         await dynamoTools.deleteTable();
     });
 
