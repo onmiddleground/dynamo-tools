@@ -1,6 +1,6 @@
 {
   "name": "@onmiddleground/dynamo-tools",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Useful Dynamo Tools for development and testing",
   "main": "dist/index.js",
   "files": [

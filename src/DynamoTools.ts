@@ -168,8 +168,12 @@ export class DynamoTools {
             let putRequest = {
                 PutRequest: {
                     Item: {
-                        cadt: now.toISOString(),
-                        uadt: now.toISOString(),
+                        cadt: {
+                            "S": now.toISOString()
+                        },
+                        uadt: {
+                            "S" : now.toISOString()
+                        },
                         ...item,
                     }
                 }
@@ -179,7 +183,11 @@ export class DynamoTools {
 
         // Include the last batch
         if (batch.RequestItems[tableName].length > 0) {
-            await this.getDynamoDb().batchWriteItem(batch);
+            try {
+                await this.getDynamoDb().batchWriteItem(batch);
+            } catch (err) {
+                logger.error(err, "Failed Batch Write");
+            }
         }
 
         logger.debug(`Finished Creating Data`);

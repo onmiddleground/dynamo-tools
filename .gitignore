@@ -38,3 +38,4 @@ lerna-debug.log*
 /package-lock.json
 /api-private-threads/.tmp_jest/
 /api-private-threads/package-lock.json
+/src/test/data/shared-local-instance.db
