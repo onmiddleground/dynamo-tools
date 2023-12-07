@@ -1,7 +1,9 @@
-import logger from "../logger";
-logger.level = "debug";
+import logger from '../logger';
 
+process.env.PINO_LOG_LEVEL = "debug";
 import {DynamoTools} from "../DynamoTools";
+import { afterEach } from 'node:test';
+const sampleData = require("./sample-data.json");
 
 const chai = require("chai");
 const chaiAsPromised = require('chai-as-promised');
@@ -18,8 +20,8 @@ describe("dynamo tools", function() {
         });
     });
 
-    after(async () => {
-        await dynamoTools.deleteTable();
+    afterEach(async () => {
+        // await dynamoTools.deleteTable();
     });
 
     it("should create a table", async () => {
@@ -27,4 +29,12 @@ describe("dynamo tools", function() {
         const p = dynamoTools.createTable(true);
         expect(p).to.be.fulfilled;
     });
+
+    it("should seed some data", async () => {
+        logger.debug(sampleData, "Seeding data");
+        await dynamoTools.createTable(true);
+        const res = await dynamoTools.seedData(sampleData)
+        console.log(res);
+    });
+
 });

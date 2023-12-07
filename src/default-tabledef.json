@@ -16,14 +16,6 @@
     {
       "AttributeName": "GSI1sk",
       "AttributeType": "S"
-    },
-    {
-      "AttributeName": "cadt",
-      "AttributeType": "S"
-    },
-    {
-      "AttributeName": "uadt",
-      "AttributeType": "S"
     }
   ],
   "KeySchema":

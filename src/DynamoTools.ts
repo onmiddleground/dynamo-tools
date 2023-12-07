@@ -1,10 +1,10 @@
 /**
  * Utility for creating and deleting a Dynamo Table as well as seeding data to the table
  */
-import dayjs = require("dayjs");
+import dayjs from 'dayjs';
 import defaultTableDefinition from "./default-tabledef.json";
 import logger from "./logger";
-import { CreateTableInput, DynamoDB } from '@aws-sdk/client-dynamodb';
+import { CreateTableInput, DynamoDB, DynamoDBClientConfig } from '@aws-sdk/client-dynamodb';
 
 /**
  * Used in the DynamoTestIntegration as a form of callback to update the Item being inserted into the table.
@@ -14,12 +14,18 @@ export interface DataCreatePlugin {
     beforeCreate(item: any): Promise<any>;
 }
 
+export type AWSCredentials = {
+    accessKeyId: string,
+    secretAccessKey: string,
+}
+
 /**
  * Local Dev options.
  */
 export interface DynamoOptions {
     endpoint?: string,
-    region?: string
+    region?: string,
+    credentials?: AWSCredentials,
 }
 
 /**
@@ -27,11 +33,7 @@ export interface DynamoOptions {
  * allow you to create a Dynamo Table for testing, seed data etc.
  */
 export class DynamoTools {
-    public static GSI_SK = "GSIsk";
-    public static GSI1_PK = "GSI1pk";
-    public static GSI_TYPE = "GSItype";
-
-    // public static GSI_LOOKUP = "GSIlookup";
+    private dynamoDB: DynamoDB;
 
     /**
      * Constructs the Tools.
@@ -46,20 +48,27 @@ export class DynamoTools {
 
     protected initLocal(options?: DynamoOptions) {
         const useLocal = process.env.LOCAL_DEV;
+        let awsOptions: DynamoDBClientConfig = {
+            region: "us-east-1"
+        };
         if (options || useLocal) {
-            const awsOptions: any = {
+            awsOptions = {
                 region: options.region || "us-east-1",
-                endpoint: options.endpoint || "http://localhost:4566"
+                endpoint: options.endpoint || "http://localhost:4566",
+                credentials: options.credentials || {
+                    accessKeyId: "accessKeyId",
+                    secretAccessKey: "secretAccessKey"
+                }
             }
-            // AWS.config.update(awsOptions);
         }
+        this.dynamoDB = new DynamoDB(awsOptions);
     }
 
     async deleteTable() {
         const tableName = this.tableName;
-        const dynamoDB = new DynamoDB();
+
         try {
-            await dynamoDB.deleteTable({
+            await this.getDynamoDb().deleteTable({
                 TableName: tableName
             });
             logger.debug(`Deleted Table -> ${tableName}`);
@@ -78,9 +87,13 @@ export class DynamoTools {
         });
     }
 
+    public getDynamoDb() {
+        return this.dynamoDB;
+    }
+
     /**
      * Follows Alex Debrie's book on single table design using a pk/sk and "type".
-     * Gives full flexibility to create access patterns but creates all of the
+     * Gives full flexibility to create access patterns but creates all
      * appropriate indexes etc to get you going.
      *
      * @param deleteTable true/false to delete the table before creating it
@@ -88,7 +101,7 @@ export class DynamoTools {
      *
      * @returns The Result of the Created Table.
      */
-    async createTable(deleteTable: boolean = true, dynamoTableDefinition?: CreateTableInput): Promise<any> {
+    async createTable(deleteTable: boolean = false, dynamoTableDefinition?: CreateTableInput): Promise<any> {
         try {
             const tableName: string = this.tableName;
 
@@ -103,13 +116,12 @@ export class DynamoTools {
                 await this.deleteTable();
             }
 
-            const dynamoDB = new DynamoDB();
             let tableResult;
             try {
-                tableResult = await dynamoDB.createTable(params);
+                tableResult = await this.getDynamoDb().createTable(params);
                 logger.debug(`Table Created -> ${tableName}`);
             } catch (err) {
-                logger.error("Error creating DB.  DB may already exist", err);
+                logger.error(err,"Error creating DB.  DB may already exist");
             }
 
             return tableResult;
@@ -126,8 +138,6 @@ export class DynamoTools {
      * @param plugin
      */
     public async seedData(items: any, plugin?: DataCreatePlugin) {
-        // Assert.ok(type != null, "type is a required field and must be an entity type name");
-        const docClient = new DynamoDB();
         const tableName = this.tableName;
 
         const batch: any = {
@@ -140,7 +150,7 @@ export class DynamoTools {
         for (const dataItem of items) {
             let item = dataItem;
             if (batch.RequestItems[tableName].length >= MAX_BATCH_SIZE) {
-                await docClient.batchWriteItem(batch);
+                await this.getDynamoDb().batchWriteItem(batch);
                 batch.RequestItems[tableName] = [];
             }
 
@@ -169,7 +179,7 @@ export class DynamoTools {
 
         // Include the last batch
         if (batch.RequestItems[tableName].length > 0) {
-            await docClient.batchWriteItem(batch);
+            await this.getDynamoDb().batchWriteItem(batch);
         }
 
         logger.debug(`Finished Creating Data`);
