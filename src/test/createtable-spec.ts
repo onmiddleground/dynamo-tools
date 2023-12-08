@@ -13,7 +13,7 @@ describe("dynamo tools", function() {
     let dynamoTools: DynamoTools;
 
     before(async () => {
-        dynamoTools = new DynamoTools("unit-test-db", {
+        dynamoTools = new DynamoTools("dynamoo-test-db", {
             endpoint: "http://localhost:4566",
             region: "us-east-1",
         });
