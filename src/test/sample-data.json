@@ -1,0 +1,48 @@
+[
+  {
+    "pk": {
+      "S": "TODO#1vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "sk": {
+      "S" : "TODO#1vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "typ": {
+      "S": "TODO"
+    },
+    "id": {
+      "S" : "1vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "desc": {
+      "S": "This is a Todo Item"
+    },
+    "GSI1pk": {
+      "S" : "TODO"
+    },
+    "GSI1sk": {
+      "S" : "TODO#CADT#2021-04-24T17:09:40.089Z"
+    }
+  },
+  {
+    "pk": {
+      "S": "TODO#2vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "sk": {
+      "S" : "TODO#2vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "typ": {
+      "S": "TODO"
+    },
+    "id": {
+      "S" : "2vlsmYBTMZJWCjxM9AVYk6ZKahD"
+    },
+    "desc": {
+      "S": "This is a Second Todo Item"
+    },
+    "GSI1pk": {
+      "S" : "TODO"
+    },
+    "GSI1sk": {
+      "S" : "TODO#CADT#2021-03-24T17:09:40.089Z"
+    }
+  }
+]

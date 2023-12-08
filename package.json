@@ -1,6 +1,6 @@
 {
   "name": "@onmiddleground/dynamo-tools",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Useful Dynamo Tools for development and testing",
   "main": "dist/index.js",
   "files": [
@@ -31,6 +31,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.14.0",
     "@types/sinon": "^10.0.13",
+    "pino-pretty": "^10.2.3",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
